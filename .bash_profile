@@ -11,6 +11,7 @@ if [ "$system_type" = "Darwin" ]; then
   # Enable OSX color
   alias ls='ls -G'
 else
+  alias ls='ls --color=auto'
   alias less='less -R'
 fi
 
@@ -77,7 +78,7 @@ for potential_bin_dir in "${potential_bin_dirs[@]}"; do
 done
 
 # for golang
-export GOPATH=~/go
+export GOPATH=/go
 export PATH=$PATH:$GOPATH/bin:./bin/linux_amd64/:./vendor/bin:
 
 
