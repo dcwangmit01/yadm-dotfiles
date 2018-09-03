@@ -72,7 +72,7 @@ potential_bin_dirs=( \
   /usr/local/google-cloud-sdk/bin \
 )
 for potential_bin_dir in "${potential_bin_dirs[@]}"; do
-  if [[ -d "$potential_bin_dir" ]] && !(echo $PATH | grep "$potential_bin_dir" &>/dev/null); then
+  if [[ -d "$potential_bin_dir" ]] && ! echo $PATH | grep "$potential_bin_dir" &>/dev/null; then
     export PATH=$PATH:$potential_bin_dir
   fi
 done
@@ -108,3 +108,8 @@ if [[ -d /keybase/private ]]; then
   fi
 fi
 
+#####################################################################
+# Enable bash completion for debian based distros
+if [[ -f /etc/bash_completion ]]; then
+    source /etc/bash_completion
+fi
