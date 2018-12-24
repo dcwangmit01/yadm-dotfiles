@@ -116,8 +116,14 @@ fi
 
 #####################################################################
 # Enable kubectl completion
-source <(kubectl completion bash)
+
+if [[ -n ${PS1:-''} ]] && which kubectl &>/dev/null; then
+    source <(kubectl completion bash)
+fi
 
 #####################################################################
 # Enable kops completion
-source <(kops completion bash)
+
+if [[ -n ${PS1:-''} ]] && which kops &>/dev/null; then
+    source <(kops completion bash)
+fi
