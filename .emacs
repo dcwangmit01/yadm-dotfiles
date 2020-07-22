@@ -19,7 +19,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; list the packages you want
 (setq package-list '(column-enforce-mode
-		     go-mode))
+		     go-mode
+		     ))
 
 ; list the repositories containing them
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
@@ -41,9 +42,9 @@
 
 ; column-enforce-mode
 ; enable for all programming modes
-(add-hook 'prog-mode-hook 'column-enforce-mode)
-; set column width
-(setq column-enforce-column 119)
+; (add-hook 'prog-mode-hook 'column-enforce-mode)
+; ; set column width
+; (setq column-enforce-column 119)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Notes

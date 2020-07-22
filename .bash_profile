@@ -6,7 +6,7 @@ system_type=$(uname -s)
 alias emacs='emacs -nw'
 alias gits='gits --no-master'
 alias k=kubectl
-alias passwordgen='cat /dev/urandom |tr -dc A-Za-z0-9 | head -c${1:-32};echo;'
+alias passwordgen='cat /dev/urandom | LC_CTYPE=C tr -dc A-Za-z0-9 | head -c${1:-32};echo;'
 
 if [ "$system_type" = "Darwin" ]; then
   # Enable OSX color
@@ -48,19 +48,31 @@ potential_bin_dirs=( \
   # for brew gnu-tar (required for kubernetes build) \
   /usr/local/opt/gnu-tar/libexec/gnubin \
   # for gnu emacs \
-  /usr/local/Cellar/emacs/25.2/bin \
+  /usr/local/opt/emacs/bin \
   # for openssl \
-  /usr/local/Cellar/openssl/1.0.2l/bin \
+  /usr/local/opt/openssl/bin \
   # for curl \
   /usr/local/Cellar/curl/7.54.1/bin \
   # for gcloud, kubectl
   /usr/local/google-cloud-sdk/bin \
+  # for ruby rvm
+  ~/.rvm/bin \
+  # for graphviz
+  /usr/local/opt/graphviz/bin \
+  # for java
+  /usr/local/opt/java/bin \
 )
 for potential_bin_dir in "${potential_bin_dirs[@]}"; do
   if [[ -d "$potential_bin_dir" ]] && ! echo $PATH | grep "$potential_bin_dir" &>/dev/null; then
     export PATH=$PATH:$potential_bin_dir
   fi
 done
+
+# for brew java
+if [ -d /usr/local/opt/java/bin ]; then
+    export PATH=/usr/local/opt/java/bin:$PATH
+    export JAVA_HOME=/usr/local/opt/java
+fi
 
 # for golang
 export GOPATH=/go
@@ -144,9 +156,25 @@ if [[ -n ${PS1:-''} ]] && which kops &>/dev/null; then
 fi
 
 #####################################################################
+# Enable fzf completion
+
+if which fzf &>/dev/null; then
+    if [ ! -d ~/.fzf ]; then
+	mkdir -p ~/.fzf
+    fi
+    for f in key-bindings.bash completion.bash; do
+	if [ ! -f ~/.fzf/$f ]; then
+	    curl -fsSL https://raw.githubusercontent.com/junegunn/fzf/master/shell/$f > ~/.fzf/$f
+	fi
+	source ~/.fzf/$f
+    done
+fi
+
+#####################################################################
 # Load .bashrc if present
 
 if [[ -f .bashrc ]]; then
     source .bashrc
 fi
 
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
