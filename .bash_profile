@@ -35,38 +35,21 @@ fi
 potential_bin_dirs=( \
   ~/bin \
   # for brew \
-  /usr/local/bin \
-  /usr/local/sbin \
-  # for golang \
-  /usr/local/opt/go/libexec/bin \
-  /usr/local/go/bin \
-  # for protocol buffers \
-  /usr/local/protoc/bin \
-  # for terraform
-  /usr/local/terraform/bin \
+  /opt/homebrew/bin
   # for brew gnu-sed (required for kubernetes build) \
   /usr/local/opt/gnu-sed/libexec/gnubin \
   # for brew gnu-tar (required for kubernetes build) \
   /usr/local/opt/gnu-tar/libexec/gnubin \
-  # for gnu emacs \
-  /usr/local/opt/emacs/bin \
-  # for openssl \
-  /usr/local/opt/openssl/bin \
-  # for curl \
-  /usr/local/Cellar/curl/7.54.1/bin \
-  # for gcloud, kubectl
-  /usr/local/google-cloud-sdk/bin \
-  # for ruby rvm
-  ~/.rvm/bin \
-  # for graphviz
-  /usr/local/opt/graphviz/bin \
-  # for java
-  /usr/local/opt/java/bin \
 )
 for potential_bin_dir in "${potential_bin_dirs[@]}"; do
   if [[ -d "$potential_bin_dir" ]] && ! echo $PATH | grep "$potential_bin_dir" &>/dev/null; then
     export PATH=$PATH:$potential_bin_dir
   fi
+done
+
+# Google Cloud
+for bash_include_file in $(find /opt/homebrew -name *.bash.inc); do
+    source $bash_include_file
 done
 
 # for brew java
@@ -76,8 +59,8 @@ if [ -d /usr/local/opt/java/bin ]; then
 fi
 
 # for golang
-export GOPATH=/go
-export PATH=$PATH:$GOPATH/bin:./bin/linux_amd64/:./vendor/bin:
+# export GOPATH=/go
+# export PATH=$PATH:$GOPATH/bin:./bin/linux_amd64/:./vendor/bin:
 
 # Enable pyenv
 #   Search home directory first and then system, allow pyenv
@@ -179,3 +162,5 @@ if [[ -f .bashrc ]]; then
 fi
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
