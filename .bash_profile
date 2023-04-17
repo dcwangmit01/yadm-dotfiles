@@ -6,7 +6,8 @@ system_type=$(uname -s)
 alias emacs='emacs -nw'
 alias gits='gits --no-master'
 alias k=kubectl
-alias passwordgen='cat /dev/urandom | LC_CTYPE=C tr -dc A-Za-z0-9 | head -c${1:-32};echo;'
+alias passwordgen='cat /dev/urandom | LC_ALL=C tr -dc A-Za-z0-9 | head -c${1:-32};echo;'
+alias passwordgenhex="hexdump -vn16 -e'4/4 \"%08X\" 1 \"\n\"' /dev/urandom"
 
 if [ "$system_type" = "Darwin" ]; then
   # Enable OSX color
