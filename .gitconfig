@@ -8,3 +8,5 @@
 	excludesfile = ~/.gitignore
 [color]
 	ui = auto
+[init]
+	defaultBranch = main

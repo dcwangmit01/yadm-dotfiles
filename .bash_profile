@@ -20,12 +20,30 @@ fi
 #####################################################################
 # SSH-AGENT
 
-if [ "$system_type" = "Darwin" ]; then
+if True; then
+  # if [ "$system_type" = "Darwin" ]; then
   # Dev machine (OSX)
-  # Modern OSX starts an ssh-agent automatically
-  #   https://www.dribin.org/dave/blog/archives/2007/11/28/ssh_agent_leopard/
-  # Add the user's default key
-  ssh-add -l 2>&1| grep "The agent has no identities" &>/dev/null && ssh-add &>/dev/null
+  # Ensure an ssh-agent is running
+  SSH_ENV="$HOME/.ssh/agent-environment"
+
+  function start_agent {
+      echo "Initialising new SSH agent..."
+      /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+      echo succeeded
+      chmod 600 "${SSH_ENV}"
+      . "${SSH_ENV}" > /dev/null
+      /usr/bin/ssh-add;
+  }
+
+  # Source SSH settings, if applicable
+  if [ -f "${SSH_ENV}" ]; then
+      . "${SSH_ENV}" > /dev/null
+      ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+          start_agent;
+      }
+  else
+      start_agent;
+  fi
 fi
 
 #####################################################################
@@ -34,8 +52,6 @@ fi
 # Add to path if paths exist and aren't already in $PATH (mostly for OSX brew components)
 potential_bin_dirs=( \
   ~/bin \
-  # for brew \
-  /opt/homebrew/bin
   # for brew gnu-sed (required for kubernetes build) \
   /usr/local/opt/gnu-sed/libexec/gnubin \
   # for brew gnu-tar (required for kubernetes build) \
@@ -48,11 +64,13 @@ for potential_bin_dir in "${potential_bin_dirs[@]}"; do
 done
 
 # Google Cloud
-for bash_include_file in $(find /opt/homebrew -name *.bash.inc); do
-    source $bash_include_file
-done
+if [ -d /opt/homebrew ]; then
+  for bash_include_file in $(find /opt/homebrew -name *.bash.inc); do
+      source $bash_include_file
+  done
+fi
 
-# for brew java
+# Brew Java
 if [ -d /usr/local/opt/java/bin ]; then
     export PATH=/usr/local/opt/java/bin:$PATH
     export JAVA_HOME=/usr/local/opt/java
@@ -75,11 +93,6 @@ fi
 if  [[ -n ${PS1:-''} ]] && which pyenv &>/dev/null; then
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
-fi
-
-# Enable pulumi
-if [[ -d "$HOME/.pulumi/bin" ]]; then
-    export PATH="$HOME/.pulumi/bin:$PATH"
 fi
 
 ###############################################################################
