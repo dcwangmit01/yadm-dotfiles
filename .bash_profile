@@ -20,7 +20,7 @@ fi
 #####################################################################
 # SSH-AGENT
 
-if True; then
+if true; then
   # if [ "$system_type" = "Darwin" ]; then
   # Dev machine (OSX)
   # Ensure an ssh-agent is running
