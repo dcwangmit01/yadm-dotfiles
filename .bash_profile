@@ -80,20 +80,6 @@ fi
 # export GOPATH=/go
 # export PATH=$PATH:$GOPATH/bin:./bin/linux_amd64/:./vendor/bin:
 
-# Enable pyenv
-#   Search home directory first and then system, allow pyenv
-#     installed in home to override that of system
-#   KDK has system pyenv installed in /usr/local
-if [[ -d "$HOME/.pyenv/bin" ]]; then
-    export PATH="$HOME/.pyenv/bin:$PATH"
-elif [[ -d "/usr/local/pyenv/bin" ]]; then
-    export PATH="/usr/local/pyenv/bin:$PATH"
-    export PYENV_ROOT="/usr/local/pyenv"
-fi
-if  [[ -n ${PS1:-''} ]] && which pyenv &>/dev/null; then
-    eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"
-fi
 
 ###############################################################################
 # Load hooks
@@ -176,4 +162,22 @@ fi
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
-if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+
+if [ -f /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# NVM: Node version manager
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+export EDITOR=emacs
+
+# Enable pyenv
+if which pyenv &>/dev/null; then
+    eval "$(pyenv init -)"
+fi
+if which pyenv-virtualenv-init &> /dev/null; then
+    eval "$(pyenv virtualenv-init -)"
+fi
