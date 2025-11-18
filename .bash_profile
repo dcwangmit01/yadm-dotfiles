@@ -102,3 +102,10 @@ if [[ -f .bashrc ]]; then
 fi
 
 export EDITOR=emacs
+
+
+#####################################################################
+# Silence the MacOS zsh warning
+#   Bash is hardly deprecated
+
+export BASH_SILENCE_DEPRECATION_WARNING=1
