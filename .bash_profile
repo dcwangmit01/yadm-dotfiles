@@ -22,10 +22,12 @@ fi
 # Add to path if paths exist and aren't already in $PATH (mostly for OSX brew components)
 potential_bin_dirs=( \
   ~/bin \
+  ~/.bin \
   # for brew gnu-sed (required for kubernetes build) \
   /usr/local/opt/gnu-sed/libexec/gnubin \
   # for brew gnu-tar (required for kubernetes build) \
   /usr/local/opt/gnu-tar/libexec/gnubin \
+  /Users/dave/.cargo/bin \
 )
 for potential_bin_dir in "${potential_bin_dirs[@]}"; do
   if [[ -d "$potential_bin_dir" ]] && ! echo $PATH | grep "$potential_bin_dir" &>/dev/null; then
@@ -97,8 +99,8 @@ fi
 #####################################################################
 # Load .bashrc if present
 
-if [[ -f .bashrc ]]; then
-    source .bashrc
+if [[ -f ~/.bashrc ]]; then
+    source ~/.bashrc
 fi
 
 export EDITOR=emacs
@@ -109,3 +111,21 @@ export EDITOR=emacs
 #   Bash is hardly deprecated
 
 export BASH_SILENCE_DEPRECATION_WARNING=1
+
+. "$HOME/.cargo/env"
+
+# Fix color paste in Alacritty/bash
+bind 'set enable-bracketed-paste off'
+
+# claude-custom tooling (tkc, adv) on PATH
+export PATH="$HOME/Dev/claude-custom/bin:$PATH"
+
+
+# reopen tmux sessions in alacritty
+tma() {
+  local tmux_bin
+  tmux_bin=$(command -v tmux)
+  for s in $("$tmux_bin" list-sessions -F '#S #{session_attached}' | awk '$2==0 {print $1}'); do
+    alacritty msg create-window -e "$tmux_bin" attach -t "$s"
+  done
+}
