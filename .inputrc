@@ -1,0 +1,5 @@
+# A ~/.inputrc replaces /etc/inputrc (Home/End/Delete/Ctrl-arrow bindings on Debian);
+# keep it. Missing on macOS -> silently ignored.
+$include /etc/inputrc
+# Fix color paste in Alacritty/bash
+set enable-bracketed-paste off

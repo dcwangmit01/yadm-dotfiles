@@ -28,13 +28,19 @@ yadm push
 
 ## Customizing your setup
 
+Shell startup is one shared, portable file: [`.bashrc`](.bashrc) (Linux + macOS;
+OS deltas live in a single `Darwin` case). `.bash_profile` is a stub that sources
+it, so login and non-login shells behave identically. At the end, `.bashrc` sources
+these git-ignored extension points if they exist, in order:
 
-The default [`.bash_profile`](https://github.com/dcwangmit01/yadm-dotfiles/blob/master/.bash_profile#L103) provided by this repo will search for additional bash profiles in a few pre-defined locations.  If files in any of these locations exist, they will be sourced.
+* `$HOME/.secrets` — `export` lines for tokens; create with `install -m 600 /dev/null ~/.secrets`
+* `$HOME/.bashrc.local` — host-specific config (library paths, agent sockets)
+* `$HOME/.bash_profile_private` — legacy private-profile hook
 
-* `$HOME/.bash_profile_private`
-* `$HOME/.config/kdk/.bash_profile_private`
-* `/keybase/private/<user-keybase-id>/.bash_profile_private`
-  * If the user has installed [Keybase](https://keybase.io/)
+These are sourced on **every** interactive shell, so keep them to `export`s / functions
+(no one-shot setup commands). `.bashrc` and `.inputrc` are tracked: on a machine that
+already has local versions, move their custom lines into `~/.bashrc.local` first, then
+`yadm checkout -- .bashrc .inputrc` (a `yadm reset --hard` would discard them).
 
 One may customize their own private settings by creating any of the files above.  Here is an example of what the content could look like.
 
