@@ -79,7 +79,7 @@ export HOMEBREW_GITHUB_API_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ### colima caveat
 
-colima re-adds `Include /Users/dave/.colima/ssh_config` to the tracked
+colima re-adds `Include $HOME/.colima/ssh_config` to the tracked
 `~/.ssh/config` if it can't find that line there. To keep the tracked file
 clean, that `Include` line lives in `~/.ssh/config.local` instead — colima
 finds it and leaves the tracked file alone.
