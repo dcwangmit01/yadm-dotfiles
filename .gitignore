@@ -5,3 +5,6 @@
 # never tracked by yadm (also globally ignored in every repo via core.excludesfile)
 .secrets
 .bashrc.local
+.ssh/config.local
+.gitconfig.local
+.emacs.d/custom.el
