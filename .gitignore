@@ -8,3 +8,6 @@
 .ssh/config.local
 .gitconfig.local
 .emacs.d/custom.el
+
+# Local Qwen endpoint credentials
+qwen.env
