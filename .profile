@@ -15,7 +15,8 @@
 }
 
 # prepend: our own tooling wins over system binaries (last-listed ends first)
-for d in "$HOME/.local/bin" "$HOME/Dev/claude-custom/bin"; do
+for d in "$HOME/.local/bin" "$HOME/Dev/claude-custom/bin" \
+         "$HOME/.local/node/bin" "$HOME/.opencode/bin"; do
   [ -d "$d" ] || continue
   case ":$PATH:" in *":$d:"*) ;; *) PATH="$d:$PATH";; esac
 done
