@@ -70,6 +70,18 @@ export EDITOR=emacs
 passwordgen() { LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c "${1:-32}"; echo; }
 alias passwordgenhex="hexdump -vn16 -e'4/4 \"%08X\" 1 \"\n\"' /dev/urandom"
 
+# After ssh exits (incl. abrupt timeout when the laptop sleeps), a remote tmux/TUI
+# may have left this terminal in mouse-reporting mode, so trackpad moves spew SGR
+# mouse reports (e.g. 35;22;20M) at the local prompt. Disable the mouse modes on
+# return. `[ -t 1 ]` skips it under command substitution so captured output stays clean.
+ssh() {
+  command ssh "$@"
+  local ret=$?
+  [ -t 1 ] && printf '\033[?1000l\033[?1002l\033[?1003l\033[?1006l\033[?1015l\033[?1005l'
+  return $ret
+}
+alias mreset='printf "\033[?1000l\033[?1002l\033[?1003l\033[?1006l\033[?1015l\033[?1005l"'
+
 # --- hooks / completions, each only if the tool is installed ---
 command -v direnv  >/dev/null && eval "$(direnv hook bash)"
 command -v kubectl >/dev/null && . <(kubectl completion bash)
